@@ -25,7 +25,7 @@ namespace RisaAtelier.ProxyEnablementKit
             }
 
             #region モード (Enterprise / Community) を、選択します
-            {
+            
                 var execMode = Util.ExecuteMode.Enterprise;
                 var executePath = string.Empty;
 
@@ -69,16 +69,40 @@ namespace RisaAtelier.ProxyEnablementKit
                         throw new DirectoryNotFoundException();
                     }
                 }
-            }
+            
             #endregion
 
-            // プロキシサーバーの、URLを入力します
+            #region プロキシサーバー設定
+            
+                // プロキシサーバーの、URLを入力します
+                Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_URL);
+                var proxyUrl = Console.ReadLine();
+                if (proxyUrl.Trim().Equals(string.Empty)) return;
 
+                // プロキシサーバーの、ユーザーを入力します
+                Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_USER);
+                var proxyUser = Console.ReadLine();
+                var proxyPass = string.Empty;
+                if (!proxyUser.Trim().Equals(string.Empty))
+                {
+                    Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_PASS);
+                    proxyPass = Util.InputPassword();
+
+                    Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_PASS_CONFIRM);
+                    if (Util.InputPassword() != proxyPass)
+                    {
+                        Console.WriteLine(Properties.Resources.ERROR_PASSWORD_NOMATCH);
+                        return;
+                    }
+                }
+            
+            #endregion
 
             var workDir = Path.Combine(Util.AppDirectory, String.Format("ProxyKitOutput_{0}", DateTime.Now.ToString("yyyyMMdd_HHmmss")));
             Directory.CreateDirectory(workDir);
 
-            ProxyAddonBuilder.CreateDll(workDir, @"http://proxy.hogehoge.com:80", "scott", "tiger");
+            // DLLを、作成します
+            ProxyAddonBuilder.CreateDll(workDir, proxyUrl, proxyUser, proxyPass);
 
 #if DEBUG
             Console.ReadLine();

@@ -123,6 +123,9 @@
   <data name="ERROR_NUGET_NOT_FOUND" xml:space="preserve">
     <value>[エラー #1]Nuget.exeが見つかりませんでした。</value>
   </data>
+  <data name="ERROR_PASSWORD_NOMATCH" xml:space="preserve">
+    <value>パスワードと、確認入力が、異なっています</value>
+  </data>
   <data name="MSG_INPUT_PROXY_PASS" xml:space="preserve">
     <value>プロキシサーバーの、認証に使用する、パスワードを、入力してください</value>
   </data>

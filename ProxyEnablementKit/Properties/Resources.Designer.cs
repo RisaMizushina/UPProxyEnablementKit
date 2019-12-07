@@ -79,6 +79,15 @@ namespace RisaAtelier.ProxyEnablementKit.Properties {
         }
         
         /// <summary>
+        ///   Invalid Confirm Password. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ERROR_PASSWORD_NOMATCH {
+            get {
+                return ResourceManager.GetString("ERROR_PASSWORD_NOMATCH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Input Proxy Server Authentication Password に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string MSG_INPUT_PROXY_PASS {

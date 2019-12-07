@@ -123,6 +123,9 @@
   <data name="ERROR_NUGET_NOT_FOUND" xml:space="preserve">
     <value>[Error #1]Nuget.exe not found. (You need to download it to execute this tool)</value>
   </data>
+  <data name="ERROR_PASSWORD_NOMATCH" xml:space="preserve">
+    <value>Invalid Confirm Password.</value>
+  </data>
   <data name="MSG_INPUT_PROXY_PASS" xml:space="preserve">
     <value>Input Proxy Server Authentication Password</value>
   </data>
