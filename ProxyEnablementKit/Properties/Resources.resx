@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ERROR_BUILD_FAILUE" xml:space="preserve">
+    <value>[Error #3]Create DLL Failed.</value>
+  </data>
   <data name="ERROR_DOTNET_NOT_FOUND" xml:space="preserve">
     <value>[Error #2] .NET Framework Directory Not Found</value>
   </data>
@@ -126,6 +129,12 @@
   <data name="ERROR_PASSWORD_NOMATCH" xml:space="preserve">
     <value>Invalid Confirm Password.</value>
   </data>
+  <data name="LABEL_TARGET_DIR" xml:space="preserve">
+    <value>Execution Source:</value>
+  </data>
+  <data name="MSG_EXEC_COMPLETE" xml:space="preserve">
+    <value>Execution Completed.</value>
+  </data>
   <data name="MSG_INPUT_PROXY_PASS" xml:space="preserve">
     <value>Input Proxy Server Authentication Password</value>
   </data>
@@ -133,7 +142,7 @@
     <value>Input Proxy Server Authentication Password (Confirm)</value>
   </data>
   <data name="MSG_INPUT_PROXY_URL" xml:space="preserve">
-    <value>Input Proxy Server URL</value>
+    <value>Input Proxy Server URL (ex: http://proxy.mycorp.com:8080)</value>
   </data>
   <data name="MSG_INPUT_PROXY_USER" xml:space="preserve">
     <value>Input Proxy Server Authentication User Name (If no authentication, keep empty)</value>

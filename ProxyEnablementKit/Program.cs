@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Xml;
 
 namespace RisaAtelier.ProxyEnablementKit
 {
@@ -26,75 +24,88 @@ namespace RisaAtelier.ProxyEnablementKit
 
             #region モード (Enterprise / Community) を、選択します
             
-                var execMode = Util.ExecuteMode.Enterprise;
-                var executePath = string.Empty;
+            var execMode = Util.ExecuteMode.Enterprise;
+            var executePath = string.Empty;
 
-                Console.WriteLine(Properties.Resources.MSG_UIPATH_TYPE);
-                var choice = Console.ReadLine();
-                if (choice.Trim().Equals("0"))
+            Console.WriteLine(Properties.Resources.MSG_UIPATH_TYPE);
+            var choice = Console.ReadLine();
+            if (choice.Trim().Equals("0"))
+            {
+                execMode = Util.ExecuteMode.Enterprise;
+
+                // Default設定だと、 Profram Files (x86) に、インストールされています
+                var enterpriseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "UiPath", "Studio");
+                if (Directory.Exists(enterpriseDir) && File.Exists(Path.Combine(enterpriseDir, "UiPath.Executor.exe")))
                 {
-                    execMode = Util.ExecuteMode.Enterprise;
+                    executePath = enterpriseDir;
+                }
+            }
+            else if (choice.Trim().Equals("1"))
+            {
+                execMode = Util.ExecuteMode.Community;
 
-                    // Default設定だと、 Profram Files (x86) に、インストールされています
-                    var enterpriseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "UiPath", "Studio");
-                    if (Directory.Exists(enterpriseDir) && File.Exists(Path.Combine(enterpriseDir, "UiPath.Executor.exe")))
+                // こちらは、設定の変更はできないので、存在しなければ、インストールされていないと、思いますが・・・
+                var communityDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UiPath");
+                if (Directory.Exists(communityDir) && File.Exists(Path.Combine(communityDir, "UiPath.Studio.exe")))
+                {
+                    var targetDir = string.Empty;
+
+                    // 処理対象の、ディレクトリを、探します
+                    foreach(var subDir in Directory.GetDirectories(communityDir))
                     {
-                        executePath = enterpriseDir;
+                        // app- ではじまるのが、UiPathのディレクトリ
+                        if(Path.GetFileName(subDir).StartsWith("app-"))
+                        {
+                            targetDir = targetDir.Equals(string.Empty) ? subDir : (targetDir.CompareTo(subDir) > 0 ? targetDir : subDir);
+                        }
                     }
+                    executePath = targetDir;
                 }
-                else if (choice.Trim().Equals("1"))
-                {
-                    execMode = Util.ExecuteMode.Community;
+            }
+            else
+            {
+                return;
+            }
 
-                    // こちらは、設定の変更はできないので、存在しなければ、インストールされていないと、思いますが・・・
-                    var communityDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UiPath");
-                    if (Directory.Exists(communityDir) && File.Exists(Path.Combine(communityDir, "UiPath.Studio.exe")))
-                    {
-                        executePath = communityDir;
-                    }
-                }
-                else
-                {
-                    return;
-                }
+            // 実行ディレクトリが、見つけられなければ、入力を求めます
+            if(executePath.Equals(string.Empty))
+            {
+                Console.WriteLine(Properties.Resources.MSG_INPUT_TARGET_DIR);
+                executePath = Console.ReadLine();
 
-                // 実行ディレクトリが、見つけられなければ、入力を求めます
-                if(executePath.Equals(string.Empty))
+                if(executePath.Trim().Equals(string.Empty) || !Directory.Exists(executePath))
                 {
-                    Console.WriteLine(Properties.Resources.MSG_INPUT_TARGET_DIR);
-                    executePath = Console.ReadLine();
-
-                    if(executePath.Trim().Equals(string.Empty) || !Directory.Exists(executePath))
-                    {
-                        throw new DirectoryNotFoundException();
-                    }
+                    throw new DirectoryNotFoundException();
                 }
-            
+            }
+
+            Console.WriteLine(Properties.Resources.LABEL_TARGET_DIR + executePath);
             #endregion
 
             #region プロキシサーバー設定
             
                 // プロキシサーバーの、URLを入力します
-                Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_URL);
-                var proxyUrl = Console.ReadLine();
-                if (proxyUrl.Trim().Equals(string.Empty)) return;
+            Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_URL);
+            var proxyUrl = Console.ReadLine().Trim();
+            if (proxyUrl.Equals(string.Empty)) return;
+            
+            // プロキシサーバーの、ユーザーを入力します
+            Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_USER);
+            var proxyUser = Console.ReadLine().Trim();
 
-                // プロキシサーバーの、ユーザーを入力します
-                Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_USER);
-                var proxyUser = Console.ReadLine();
-                var proxyPass = string.Empty;
-                if (!proxyUser.Trim().Equals(string.Empty))
+            var proxyPass = string.Empty;
+            if (!proxyUser.Equals(string.Empty))
+            {
+                Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_PASS);
+                proxyPass = Util.InputPassword();
+
+                Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_PASS_CONFIRM);
+                if (Util.InputPassword() != proxyPass)
                 {
-                    Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_PASS);
-                    proxyPass = Util.InputPassword();
-
-                    Console.WriteLine(Properties.Resources.MSG_INPUT_PROXY_PASS_CONFIRM);
-                    if (Util.InputPassword() != proxyPass)
-                    {
-                        Console.WriteLine(Properties.Resources.ERROR_PASSWORD_NOMATCH);
-                        return;
-                    }
+                    Console.WriteLine(Properties.Resources.ERROR_PASSWORD_NOMATCH);
+                    return;
                 }
+             }
             
             #endregion
 
@@ -102,8 +113,35 @@ namespace RisaAtelier.ProxyEnablementKit
             Directory.CreateDirectory(workDir);
 
             // DLLを、作成します
-            ProxyAddonBuilder.CreateDll(workDir, proxyUrl, proxyUser, proxyPass);
+            var dllFile = string.Empty;
+            if(!proxyUser.Equals(string.Empty))
+            {
+                dllFile = ProxyAddonBuilder.CreateDll(workDir, proxyUrl, proxyUser, proxyPass);
+                if (!File.Exists(dllFile))
+                {
+                    Console.WriteLine(Properties.Resources.ERROR_BUILD_FAILUE);
+                    return;
+                }
+            }
 
+            // Backupを、作成します
+            FileExecution.CopyBackups(workDir, executePath, execMode);
+
+            // 編集用の、ファイルのコピーを、作成します
+            FileExecution.CreateNewFile(workDir, execMode);
+
+            // 設定を、変更します
+            // DLLを作成していたときは、移動も行います
+            if(!dllFile.Equals(string.Empty))
+            {
+                File.Move(dllFile, Path.Combine(workDir, "output", "UiPath", Path.GetFileName(dllFile)));
+            }
+            FileExecution.EditFile(workDir, execMode, !proxyUser.Equals(string.Empty), proxyUrl);
+
+            // NuGetの設定です
+            FileExecution.NuGetSetting(workDir, proxyUrl, proxyUser, proxyPass);
+
+            Console.WriteLine(Properties.Resources.MSG_EXEC_COMPLETE);
 #if DEBUG
             Console.ReadLine();
 #endif
@@ -119,6 +157,6 @@ namespace RisaAtelier.ProxyEnablementKit
             return File.Exists(Path.Combine(Util.AppDirectory, "nuget.exe"));
         }
 
-
+        
     }
 }

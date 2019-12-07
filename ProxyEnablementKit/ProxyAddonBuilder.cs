@@ -41,6 +41,9 @@ namespace ProxyEnablementKit
 }
 ";
 
+        /// <summary>
+        /// .NET Frameworkの、ディレクトリを取得します
+        /// </summary>
         private static string DotNetDir
         {
             get
@@ -54,41 +57,50 @@ namespace ProxyEnablementKit
         /// <summary>
         /// DLLファイルを、作成します
         /// </summary>
-        /// <param name="tempDir"></param>
+        /// <param name="workDir"></param>
         /// <param name="proxyUrl"></param>
         /// <param name="proxyUser"></param>
         /// <param name="proxyPass"></param>
-        internal static string CreateDll(string tempDir, string proxyUrl, string proxyUser, string proxyPass)
+        internal static string CreateDll(string workDir, string proxyUrl, string proxyUser, string proxyPass)
         {
-            var srcFile = CreateSource(tempDir, proxyUrl, proxyUser, proxyPass);
+            var srcFile = CreateSource(workDir, proxyUrl, proxyUser, proxyPass);
 
-            var pi = new System.Diagnostics.ProcessStartInfo(Path.Combine(DotNetDir, "csc.exe"));
-            pi.WorkingDirectory = tempDir;
-            pi.Arguments = @"/out:ProxyModule.dll /target:library ProxyModule.cs";
-            pi.CreateNoWindow = true;
-
-            var proc = System.Diagnostics.Process.Start(pi);
-
-            while(!proc.HasExited)
+            try
             {
-                System.Threading.Thread.Sleep(0);
+                var pi = new System.Diagnostics.ProcessStartInfo(Path.Combine(DotNetDir, "csc.exe"));
+                pi.WorkingDirectory = workDir;
+                pi.Arguments = @"/out:ProxyModule.dll /target:library ProxyModule.cs";
+                pi.CreateNoWindow = true;
+
+                var proc = System.Diagnostics.Process.Start(pi);
+
+                while (!proc.HasExited)
+                {
+                    System.Threading.Thread.Sleep(0);
+                }
+            }
+            finally
+            {
+                // パスワードを残さないため、ソースコードは、削除します
+                File.Delete(srcFile);
+
             }
 
-            return Path.Combine(tempDir, "ProxyModule.dll");
+            return Path.Combine(workDir, "ProxyModule.dll");
 
         }
 
         /// <summary>
         /// ソースコードを、出力します
         /// </summary>
-        /// <param name="tempDir"></param>
+        /// <param name="targetDir"></param>
         /// <param name="proxyUrl"></param>
         /// <param name="proxyUser"></param>
         /// <param name="proxyPass"></param>
         /// <returns></returns>
-        private static string CreateSource(string tempDir, string proxyUrl, string proxyUser, string proxyPass)
+        private static string CreateSource(string targetDir, string proxyUrl, string proxyUser, string proxyPass)
         {
-            var srcFile = System.IO.Path.Combine(tempDir, "ProxyModule.cs");
+            var srcFile = System.IO.Path.Combine(targetDir, "ProxyModule.cs");
 
             var srcCode = src.Replace("%%%_PROXY_URL_%%%", proxyUrl).Replace("%%%_PROXY_USER_%%%", proxyUser).Replace("%%%_PROXY_PASSWORD_%%%", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(proxyPass)));
 

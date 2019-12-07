@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ERROR_BUILD_FAILUE" xml:space="preserve">
+    <value>[エラー #3]DLLの作成に、失敗しました。</value>
+  </data>
   <data name="ERROR_DOTNET_NOT_FOUND" xml:space="preserve">
     <value>[エラー #2] .NET Frameowrkを発見できませんでした。</value>
   </data>
@@ -124,22 +127,28 @@
     <value>[エラー #1]Nuget.exeが見つかりませんでした。</value>
   </data>
   <data name="ERROR_PASSWORD_NOMATCH" xml:space="preserve">
-    <value>パスワードと、確認入力が、異なっています</value>
+    <value>パスワードと、確認入力が、異なっていました。</value>
+  </data>
+  <data name="LABEL_TARGET_DIR" xml:space="preserve">
+    <value>設定読み込み元:</value>
+  </data>
+  <data name="MSG_EXEC_COMPLETE" xml:space="preserve">
+    <value>ファイルの作成が、完了しました。</value>
   </data>
   <data name="MSG_INPUT_PROXY_PASS" xml:space="preserve">
-    <value>プロキシサーバーの、認証に使用する、パスワードを、入力してください</value>
+    <value>プロキシサーバーの、認証に使用する、パスワードを、入力してください。</value>
   </data>
   <data name="MSG_INPUT_PROXY_PASS_CONFIRM" xml:space="preserve">
-    <value>プロキシサーバーの、認証に使用する、パスワードを、入力してください（確認のため再入力）</value>
+    <value>プロキシサーバーの、認証に使用する、パスワードを、確認のため再入力してください。</value>
   </data>
   <data name="MSG_INPUT_PROXY_URL" xml:space="preserve">
-    <value>プロキシサーバーのURLを入力してください</value>
+    <value>プロキシサーバーのURLを入力してください。 (例: http://proxy.mycorp.com:8080)</value>
   </data>
   <data name="MSG_INPUT_PROXY_USER" xml:space="preserve">
     <value>プロキシサーバーの、認証に使用する、ユーザー名を、入力してください（認証がない場合は、空欄にしてください）</value>
   </data>
   <data name="MSG_INPUT_TARGET_DIR" xml:space="preserve">
-    <value>処理対象の、UiPathをインストールしたディレクトリを、入力してください</value>
+    <value>処理対象の、UiPathをインストールしたディレクトリを、入力してください。</value>
   </data>
   <data name="MSG_UIPATH_TYPE" xml:space="preserve">
     <value>設定を作成する、UiPathの、エディションを入力してください (0: Enterprise版  1: Community版)</value>

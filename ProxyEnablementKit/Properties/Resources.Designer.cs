@@ -61,6 +61,15 @@ namespace RisaAtelier.ProxyEnablementKit.Properties {
         }
         
         /// <summary>
+        ///   [Error #3]Create DLL Failed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ERROR_BUILD_FAILUE {
+            get {
+                return ResourceManager.GetString("ERROR_BUILD_FAILUE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   [Error #2] .NET Framework Directory Not Found に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ERROR_DOTNET_NOT_FOUND {
@@ -88,6 +97,24 @@ namespace RisaAtelier.ProxyEnablementKit.Properties {
         }
         
         /// <summary>
+        ///   Execution Source: に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string LABEL_TARGET_DIR {
+            get {
+                return ResourceManager.GetString("LABEL_TARGET_DIR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Execution Completed. に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MSG_EXEC_COMPLETE {
+            get {
+                return ResourceManager.GetString("MSG_EXEC_COMPLETE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Input Proxy Server Authentication Password に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string MSG_INPUT_PROXY_PASS {
@@ -106,7 +133,7 @@ namespace RisaAtelier.ProxyEnablementKit.Properties {
         }
         
         /// <summary>
-        ///   Input Proxy Server URL に類似しているローカライズされた文字列を検索します。
+        ///   Input Proxy Server URL (ex: http://proxy.mycorp.com:8080) に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string MSG_INPUT_PROXY_URL {
             get {
