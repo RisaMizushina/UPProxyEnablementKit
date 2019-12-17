@@ -46,6 +46,12 @@ namespace RisaAtelier.ProxyEnablementKit
                 }
                 else if(cki.Key == ConsoleKey.Backspace)
                 {
+                    if (ret.Length > 0)
+                    {
+                        Console.Write((Char)0x08);
+                        Console.Write((Char)0x7F);
+                        Console.Write((Char)0x08);
+                    }
                     ret = ret.Equals(string.Empty) ? string.Empty : ret.Remove(ret.Length - 1, 1);
                 }
                 else if((int)cki.KeyChar < 0x20)
@@ -55,6 +61,7 @@ namespace RisaAtelier.ProxyEnablementKit
                 else
                 {
                     ret += cki.KeyChar;
+                    Console.Write("*");
                 }
             }
 
