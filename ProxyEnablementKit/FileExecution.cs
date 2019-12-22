@@ -238,9 +238,17 @@ namespace RisaAtelier.ProxyEnablementKit
 
             // まず、AppDataの、nuget.configを、バックアップします
             var nugetRoaming = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "NuGet", "NuGet.Config");
-            var nugetRoamingCopy = nugetRoaming + string.Format(".backup.{0}", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
 
-            File.Copy(nugetRoaming, nugetRoamingCopy);
+            // 存在しないケース対応
+            var hasNugetRoaming = File.Exists(nugetRoaming);
+
+            var nugetRoamingCopy = string.Empty;
+
+            if(hasNugetRoaming)
+            {
+                nugetRoamingCopy = nugetRoaming + string.Format(".backup.{0}", DateTime.Now.ToString("yyyyMMdd_HHmmss"));
+                File.Copy(nugetRoaming, nugetRoamingCopy);
+            }
 
             // NuGet CLIで、設定を、行います
             {
@@ -308,9 +316,13 @@ namespace RisaAtelier.ProxyEnablementKit
             // 上書きで、更新します
             targetNuConf.Save(targetNuConfFile);
 
-            // バックアップから、Roamingを、復元します
             File.Delete(nugetRoaming);
-            File.Move(nugetRoamingCopy, nugetRoaming);
+
+            // バックアップから、Roamingを、復元します
+            if (hasNugetRoaming)
+            {
+                File.Move(nugetRoamingCopy, nugetRoaming);
+            }
         }
 
     }
