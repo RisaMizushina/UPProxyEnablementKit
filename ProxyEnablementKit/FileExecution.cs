@@ -181,7 +181,7 @@ namespace RisaAtelier.ProxyEnablementKit
                     module = (XmlElement)defProxy.SelectSingleNode(@"./module");
                 }
 
-                module.SetAttribute("module", "ProxyEnablementKit.ProxyEnablementModule, " + moduleName);
+                module.SetAttribute("type", "ProxyEnablementKit.ProxyEnablementModule, " + moduleName);
 
                 // proxyノードがあったら、消しておきます
                 XmlNodeList nodeList = defProxy.SelectNodes("proxy");
